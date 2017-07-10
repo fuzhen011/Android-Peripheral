@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">BLE Server</string>
+    <string name="ble_not_supported">BLE Not Supported</string>
+    <string name="adving">Advertising...</string>
+    <string name="connected">Connected</string>
+</resources>
