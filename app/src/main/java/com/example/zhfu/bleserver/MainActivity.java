@@ -193,6 +193,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final BluetoothManager bleMan = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 //        BluetoothAdapter bleAdpt = bleMan.getAdapter();
         bleServer = bleMan.openGattServer(MainActivity.this, myServerCallback);
+        if(bleServer == null){
+            Toast.makeText(MainActivity.this, "Can't open BLE server", Toast.LENGTH_SHORT).show();
+        }
         bleServer.clearServices();
         initServer();
         initAdv();
@@ -287,10 +290,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     connected = true;
                     remoteDevice = device;
                 }
-                BluetoothDevice mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(device.getAddress());
-                boolean conn = bleServer.connect(mDevice, false);
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+//                    Log.i(TAG, "Build Version = "+Build.VERSION.SDK_INT + ", Name = "+Build.VERSION.CODENAME);
+                    BluetoothDevice mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(device.getAddress());
+                    boolean conn = bleServer.connect(mDevice, false);
+                    Log.i(TAG, "Connection State ---> Connected, Gatt connected result = "+conn);
+                }else{
+                    Log.i(TAG, "Connection State ---> Connected");
+                }
+
                 stateChangeUICallback(NOTIFY_DISABLED);
-                Log.i(TAG, "Connection State ---> Connected, Gatt connected result = "+conn);
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
